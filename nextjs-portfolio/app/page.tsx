@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs, doc, getDoc, addDoc } from 'firebase/firestore';
 import { getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDtN5CJ4fvWMCkGImJEMfKQrIiBdeKZKqI",
@@ -54,6 +55,7 @@ interface SiteData {
 }
 
 export default function Home() {
+  const router = useRouter();
   const [posts, setPosts] = useState<Post[]>([]);
   const [siteData, setSiteData] = useState<SiteData>({});
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
@@ -159,16 +161,12 @@ export default function Home() {
   const openPost = (post: Post) => {
     setSelectedPost(post);
     const slug = createSlug(post.title);
-    try {
-      window.history.pushState({ postId: post.id }, '', `/blog/${slug}`);
-    } catch (e) {
-      console.error('URL change error:', e);
-    }
+    router.push(`/blog/${slug}`);
   };
 
   const closePost = () => {
     setSelectedPost(null);
-    window.history.pushState({}, '', '/');
+    router.push('/');
   };
 
   const copyUrl = async () => {
