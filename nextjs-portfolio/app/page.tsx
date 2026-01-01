@@ -417,11 +417,12 @@ export default function Home() {
             <h3 className="text-5xl font-black tracking-tighter text-white mb-16 uppercase italic text-center">Erişim</h3>
             <form onSubmit={handleLogin} className="space-y-8">
               <input 
-                type="password" 
-                placeholder="Parola" 
-                className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-6 outline-none focus:border-indigo-500 text-center text-2xl tracking-[0.5em] text-white"
-                required 
-              />
+  type="password" 
+  name="password"
+  placeholder="Parola" 
+  className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-6 outline-none focus:border-indigo-500 text-center text-2xl tracking-[0.5em] text-white"
+  required 
+/>
               <button 
                 type="submit" 
                 className="w-full px-8 py-6 bg-white text-black rounded-full font-bold text-sm uppercase tracking-widest hover:bg-gray-200 transition"
