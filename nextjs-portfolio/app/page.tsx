@@ -24,6 +24,28 @@ interface Post {
   createdAt?: any;
 }
 
+interface Comment {
+  id: string;
+  postId?: string;
+  author?: string;
+  text?: string;
+  createdAt?: any;
+}
+
+interface Subscriber {
+  id: string;
+  email?: string;
+  createdAt?: any;
+}
+
+interface Message {
+  id: string;
+  name?: string;
+  email?: string;
+  message?: string;
+  createdAt?: any;
+}
+
 interface SiteData {
   name?: string;
   role?: string;
@@ -42,6 +64,9 @@ export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
   const [postForm, setPostForm] = useState({ title: '', category: '', content: '', imageUrl: '' });
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
     const app = initializeApp(firebaseConfig);
@@ -62,6 +87,18 @@ export default function Home() {
           setSiteData(settingsSnap.data() as SiteData);
           localStorage.setItem('siteData', JSON.stringify(settingsSnap.data()));
         }
+
+        const commentsSnap = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'comments'));
+        const commentsData = commentsSnap.docs.map(d => ({ id: d.id, ...d.data() })) as Comment[];
+        setComments(commentsData);
+
+        const subsSnap = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'subscribers'));
+        const subsData = subsSnap.docs.map(d => ({ id: d.id, ...d.data() })) as Subscriber[];
+        setSubscribers(subsData);
+
+        const messagesSnap = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'messages'));
+        const messagesData = messagesSnap.docs.map(d => ({ id: d.id, ...d.data() })) as Message[];
+        setMessages(messagesData);
       }
     });
 
@@ -143,7 +180,7 @@ export default function Home() {
     }
   };
 
-   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const password = formData.get('password') as string | null;
@@ -417,12 +454,12 @@ export default function Home() {
             <h3 className="text-5xl font-black tracking-tighter text-white mb-16 uppercase italic text-center">Erişim</h3>
             <form onSubmit={handleLogin} className="space-y-8">
               <input 
-  type="password" 
-  name="password"
-  placeholder="Parola" 
-  className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-6 outline-none focus:border-indigo-500 text-center text-2xl tracking-[0.5em] text-white"
-  required 
-/>
+                type="password" 
+                name="password"
+                placeholder="Parola" 
+                className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-6 outline-none focus:border-indigo-500 text-center text-2xl tracking-[0.5em] text-white"
+                required 
+              />
               <button 
                 type="submit" 
                 className="w-full px-8 py-6 bg-white text-black rounded-full font-bold text-sm uppercase tracking-widest hover:bg-gray-200 transition"
@@ -548,7 +585,7 @@ export default function Home() {
                     <textarea 
                       placeholder="Yazı İçeriği (HTML destekli)"
                       value={postForm.content}
-                      onChange={(e) => setPostForm({ ...postForm, imageUrl: postForm.imageUrl })}
+                      onChange={(e) => setPostForm({ ...postForm, content: e.target.value })}
                       className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-indigo-500" 
                       rows={10}
                     />
@@ -634,6 +671,156 @@ export default function Home() {
                         </div>
                       </div>
                     ))}
+                  </div>
+                </section>
+
+                <section className="space-y-8">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-600">Aboneler ({subscribers.length})</h2>
+                  </div>
+                  <div className="bg-white/[0.03] border border-white/[0.06] rounded-[2.5rem] p-8 max-h-[400px] overflow-y-auto">
+                    {subscribers.length === 0 ? (
+                      <p className="text-gray-600 text-center text-sm">Henüz abone yok.</p>
+                    ) : (
+                      <div className="space-y-3">
+                        {subscribers.map(sub => (
+                          <div key={sub.id} className="flex items-center justify-between p-4 bg-white/[0.02] rounded-xl hover:bg-white/[0.05] transition">
+                            <div className="flex items-center gap-4">
+                              <span className="text-white text-sm font-medium">{sub.email}</span>
+                              <span className="text-[10px] text-gray-500">{formatDate(sub.createdAt)}</span>
+                            </div>
+                            <button 
+                              onClick={async () => {
+                                if (confirm('Bu aboneyi silmek istiyor musunuz?')) {
+                                  const app = initializeApp(firebaseConfig);
+                                  const db = getFirestore(app);
+                                  const appId = "portfolyo-145a9";
+                                  try {
+                                    await import('firebase/firestore').then(({ deleteDoc, doc }) => {
+                                      deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'subscribers', sub.id));
+                                    });
+                                    alert('Abone silindi!');
+                                    const subsSnap = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'subscribers'));
+                                    const subsData = subsSnap.docs.map(d => ({ id: d.id, ...d.data() })) as Subscriber[];
+                                    setSubscribers(subsData);
+                                  } catch (err) {
+                                    console.error('Silme hatası:', err);
+                                    alert('Silme başarısız.');
+                                  }
+                                }
+                              }}
+                              className="p-3 bg-red-500/10 text-red-500 hover:bg-red-500/20 rounded-xl transition-all"
+                            >
+                                🗑
+                              </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </section>
+
+                <section className="space-y-8">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-600">Yorumlar ({comments.length})</h2>
+                  </div>
+                  <div className="bg-white/[0.03] border border-white/[0.06] rounded-[2.5rem] p-8 max-h-[400px] overflow-y-auto">
+                    {comments.length === 0 ? (
+                      <p className="text-gray-600 text-center text-sm">Henüz yorum yok.</p>
+                    ) : (
+                      <div className="space-y-4">
+                        {comments.map(comment => (
+                          <div key={comment.id} className="p-5 bg-white/[0.02] rounded-xl hover:bg-white/[0.05] transition">
+                            <div className="flex items-start justify-between mb-3">
+                              <div className="flex items-center gap-3">
+                                <span className="text-white text-sm font-bold">{comment.author}</span>
+                                <span className="text-[10px] text-gray-500">{formatDate(comment.createdAt)}</span>
+                              </div>
+                              <button 
+                                onClick={async () => {
+                                  if (confirm('Bu yorumu silmek istiyor musunuz?')) {
+                                    const app = initializeApp(firebaseConfig);
+                                    const db = getFirestore(app);
+                                    const appId = "portfolyo-145a9";
+                                    try {
+                                      await import('firebase/firestore').then(({ deleteDoc, doc }) => {
+                                        deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'comments', comment.id));
+                                      });
+                                      alert('Yorum silindi!');
+                                      const commentsSnap = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'comments'));
+                                      const commentsData = commentsSnap.docs.map(d => ({ id: d.id, ...d.data() })) as Comment[];
+                                      setComments(commentsData);
+                                    } catch (err) {
+                                      console.error('Silme hatası:', err);
+                                      alert('Silme başarısız.');
+                                    }
+                                  }
+                                }}
+                                className="p-2 bg-red-500/10 text-red-500 hover:bg-red-500/20 rounded-lg transition-all text-sm"
+                              >
+                                🗑
+                              </button>
+                            </div>
+                            <p className="text-gray-400 text-sm leading-relaxed">{comment.text}</p>
+                            <p className="text-[10px] text-indigo-400 mt-2">{comment.postId}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </section>
+
+                <section className="space-y-8">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-600">İletişim Mesajları ({messages.length})</h2>
+                  </div>
+                  <div className="bg-white/[0.03] border border-white/[0.06] rounded-[2.5rem] p-8 max-h-[400px] overflow-y-auto">
+                    {messages.length === 0 ? (
+                      <p className="text-gray-600 text-center text-sm">Henüz mesaj yok.</p>
+                    ) : (
+                      <div className="space-y-4">
+                        {messages.map(msg => (
+                          <div key={msg.id} className="p-6 bg-white/[0.02] rounded-xl hover:bg-white/[0.05] transition">
+                            <div className="flex items-start justify-between mb-3">
+                              <div className="flex items-center gap-4">
+                                <div className="text-left">
+                                  <p className="text-white text-sm font-bold">{msg.name}</p>
+                                  <p className="text-[10px] text-gray-500">{msg.email}</p>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <span className="text-[10px] text-gray-500">{formatDate(msg.createdAt)}</span>
+                                <button 
+                                  onClick={async () => {
+                                    if (confirm('Bu mesajı silmek istiyor musunuz?')) {
+                                      const app = initializeApp(firebaseConfig);
+                                      const db = getFirestore(app);
+                                      const appId = "portfolyo-145a9";
+                                      try {
+                                        await import('firebase/firestore').then(({ deleteDoc, doc }) => {
+                                          deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'messages', msg.id));
+                                        });
+                                        alert('Mesaj silindi!');
+                                        const messagesSnap = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'messages'));
+                                        const messagesData = messagesSnap.docs.map(d => ({ id: d.id, ...d.data() })) as Message[];
+                                        setMessages(messagesData);
+                                      } catch (err) {
+                                        console.error('Silme hatası:', err);
+                                        alert('Silme başarısız.');
+                                      }
+                                    }
+                                  }}
+                                  className="mt-2 p-2 bg-red-500/10 text-red-500 hover:bg-red-500/20 rounded-lg transition-all text-sm block"
+                                >
+                                  🗑
+                                </button>
+                              </div>
+                            </div>
+                            <p className="text-gray-400 text-sm leading-relaxed mt-3">{msg.message}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </section>
               </div>
