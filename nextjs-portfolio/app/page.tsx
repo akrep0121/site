@@ -260,6 +260,47 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12">
           <div className="lg:col-span-3">
             <div className="mb-16">
+              <div className="bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border border-white/[0.1] p-12 rounded-[3rem] mb-16">
+                <div className="max-w-2xl mx-auto text-center">
+                  <h3 className="text-3xl font-black text-white uppercase mb-4 tracking-tighter">Haftalık Analizler</h3>
+                  <p className="text-gray-400 mb-8">En güncel finansal analizler, yatırım stratejileri ve teknoloji trendleri. Her Pazartesi gelen kutunuzda.</p>
+                  <form
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      const formData = new FormData(e.currentTarget);
+                      const app = initializeApp(firebaseConfig);
+                      const db = getFirestore(app);
+                      const appId = "portfolyo-145a9";
+                      try {
+                        await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'subscribers'), {
+                          email: formData.get('email'),
+                          createdAt: new Date()
+                        });
+                        alert('Aboneliğiniz başarıyla oluşturuldu!');
+                        e.currentTarget.reset();
+                      } catch (err) {
+                        console.error('Abonelik hatası:', err);
+                        alert('Abonelik oluşturulamadı.');
+                      }
+                    }}
+                    className="flex gap-3"
+                  >
+                    <input
+                      type="email"
+                      name="email"
+                      required
+                      placeholder="E-posta adresiniz"
+                      className="flex-1 bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-indigo-500 text-white placeholder-gray-600"
+                    />
+                    <button
+                      type="submit"
+                      className="px-8 py-4 bg-white text-black rounded-full font-bold text-sm uppercase tracking-widest hover:bg-gray-200 transition"
+                    >
+                      Abone Ol
+                    </button>
+                  </form>
+                </div>
+              </div>
               <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
                 <div>
                   <h2 className="text-5xl md:text-6xl font-black tracking-tighter text-white uppercase mb-3">
@@ -338,7 +379,12 @@ export default function Home() {
                           {getExcerpt(post.content)}
                         </p>
                         <div className="flex items-center justify-between pt-4 border-t border-white/[0.05]">
-                          <span className="text-[10px] font-medium text-gray-500">{formatDate(post.createdAt)}</span>
+                          <div className="flex items-center gap-4">
+                            <span className="text-[10px] font-medium text-gray-500">{formatDate(post.createdAt)}</span>
+                            <span className="text-[10px] font-bold text-gray-600 flex items-center gap-1.5">
+                              💬 {comments.filter(c => c.postId === post.id).length}
+                            </span>
+                          </div>
                           <span className="text-[10px] font-black uppercase tracking-widest text-indigo-400 flex items-center gap-1 group-hover:gap-2 transition-all">
                             Oku
                           </span>
@@ -864,6 +910,116 @@ export default function Home() {
                 className="prose prose-invert prose-p:text-gray-400 prose-p:text-xl prose-h2:text-white prose-h2:text-4xl"
                 dangerouslySetInnerHTML={{ __html: selectedPost.content || '' }}
               />
+              <div className="mt-24 p-10 bg-white/[0.02] border border-white/5 rounded-[2.5rem] text-center">
+                <h4 className="text-2xl font-black text-white uppercase mb-6">Haftalık Analizler</h4>
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    const formData = new FormData(e.currentTarget);
+                    const app = initializeApp(firebaseConfig);
+                    const db = getFirestore(app);
+                    const appId = "portfolyo-145a9";
+                    try {
+                      await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'subscribers'), {
+                        email: formData.get('email'),
+                        createdAt: new Date()
+                      });
+                      alert('Aboneliğiniz başarıyla oluşturuldu!');
+                      e.currentTarget.reset();
+                      const subsSnap = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'subscribers'));
+                      const subsData = subsSnap.docs.map(d => ({ id: d.id, ...d.data() })) as Subscriber[];
+                      setSubscribers(subsData);
+                    } catch (err) {
+                      console.error('Abonelik hatası:', err);
+                      alert('Abonelik oluşturulamadı.');
+                    }
+                  }}
+                  className="flex gap-3"
+                >
+                  <input
+                    type="email"
+                    name="email"
+                    required
+                    placeholder="E-posta"
+                    className="flex-1 bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-indigo-500 text-xs font-bold"
+                  />
+                  <button
+                    type="submit"
+                    className="bg-white text-black px-8 py-4 rounded-2xl font-black text-[10px] uppercase"
+                  >
+                    Abone Ol
+                  </button>
+                </form>
+              </div>
+              <div className="mt-24 pt-12 border-t border-white/5">
+                <h3 className="text-3xl font-black text-white uppercase mb-12 flex items-center gap-4">
+                  Yorumlar <span className="text-indigo-500 text-sm">{comments.filter(c => c.postId === selectedPost.id).length}</span>
+                </h3>
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    const formData = new FormData(e.currentTarget);
+                    const app = initializeApp(firebaseConfig);
+                    const db = getFirestore(app);
+                    const appId = "portfolyo-145a9";
+                    try {
+                      await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'comments'), {
+                        postId: selectedPost.id,
+                        author: formData.get('author'),
+                        text: formData.get('text'),
+                        createdAt: new Date()
+                      });
+                      alert('Yorumunuz iletildi!');
+                      e.currentTarget.reset();
+                      const commentsSnap = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'comments'));
+                      const commentsData = commentsSnap.docs.map(d => ({ id: d.id, ...d.data() })) as Comment[];
+                      setComments(commentsData);
+                    } catch (err) {
+                      console.error('Yorum hatası:', err);
+                      alert('Yorum iletilemedi.');
+                    }
+                  }}
+                  className="space-y-4 mb-16"
+                >
+                  <input
+                    name="author"
+                    required
+                    placeholder="İSMİNİZ"
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-indigo-500 text-xs font-bold"
+                  />
+                  <textarea
+                    name="text"
+                    required
+                    placeholder="FİKRİNİZİ PAYLAŞIN..."
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-indigo-500 text-xs font-bold"
+                    rows={3}
+                  />
+                  <button
+                    type="submit"
+                    className="bg-indigo-600 text-white px-8 py-3 rounded-xl font-black text-[10px] uppercase"
+                  >
+                    Gönder
+                  </button>
+                </form>
+                <div className="space-y-8">
+                  {comments.filter(c => c.postId === selectedPost.id).length === 0 ? (
+                    <p className="text-gray-700 italic text-sm">İlk yorumu siz yapın!</p>
+                  ) : (
+                    comments
+                      .filter(c => c.postId === selectedPost.id)
+                      .sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0))
+                      .map(c => (
+                        <div key={c.id} className="bg-white/[0.03] p-8 rounded-[2rem]">
+                          <div className="flex items-center justify-between mb-4">
+                            <div className="text-white font-bold text-sm uppercase">{c.author}</div>
+                            <div className="text-[10px] text-gray-500">{formatDate(c.createdAt)}</div>
+                          </div>
+                          <p className="text-gray-400 text-sm leading-relaxed">{c.text}</p>
+                        </div>
+                      ))
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>
