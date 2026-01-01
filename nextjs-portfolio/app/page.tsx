@@ -143,15 +143,19 @@ export default function Home() {
     }
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget as HTMLFormElement);
-    const password = formData.get('password') as string;
+    const formData = new FormData(e.currentTarget);
+    const password = formData.get('password') as string | null;
+    console.log('Login attempt - Password:', password);
+    console.log('Password comparison:', password === 'KJSA1660');
     if (password === 'KJSA1660') {
+      console.log('Login successful!');
       setIsLoggedIn(true);
       setLoginModalOpen(false);
       setAdminModalOpen(true);
     } else {
+      console.log('Login failed - wrong password');
       alert('Hatalı şifre!');
     }
   };
