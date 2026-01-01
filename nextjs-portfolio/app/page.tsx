@@ -382,7 +382,7 @@ export default function Home() {
                           <div className="flex items-center gap-4">
                             <span className="text-[10px] font-medium text-gray-500">{formatDate(post.createdAt)}</span>
                             <span className="text-[10px] font-bold text-gray-600 flex items-center gap-1.5">
-                              💬 {comments.filter(c => c.postId === post.id).length}
+                              {comments.filter(c => c.postId === post.id).length}
                             </span>
                           </div>
                           <span className="text-[10px] font-black uppercase tracking-widest text-indigo-400 flex items-center gap-1 group-hover:gap-2 transition-all">
