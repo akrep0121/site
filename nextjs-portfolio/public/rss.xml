@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+    <channel>
+        <title>Soner Yılmaz Blog</title>
+        <link>https://soneryilmaz.vercel.app</link>
+        <description>FinTech Geliştiricisi &amp; Yatırım Analisti - En güncel finansal analizler, yatırım stratejileri ve teknoloji trendleri</description>
+        <lastBuildDate>Fri, 02 Jan 2026 17:28:59 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>Soner Yılmaz Blog RSS Feed</generator>
+        <language>tr</language>
+        <image>
+            <title>Soner Yılmaz Blog</title>
+            <url>https://soneryilmaz.vercel.app/favicon.ico</url>
+            <link>https://soneryilmaz.vercel.app</link>
+        </image>
+        <copyright>© 2026 Soner Yılmaz</copyright>
+        <item>
+            <title><![CDATA[Çocuğunuzun Geleceğini Bir Portföy İle İnşa Edin]]></title>
+            <link>https://soneryilmaz.vercel.app/blog/cocugunuzun-gelecegini-bir-portfoy-ile-insa-edin</link>
+            <guid isPermaLink="false">F4Fssp2qeRT3M3XuS3XX</guid>
+            <pubDate>Sat, 27 Dec 2025 09:35:19 GMT</pubDate>
+            <description><![CDATA[Çocuklarınızın Geleceğini Borsada İnşa Edin: Finansal Özgürlük RehberiBir ebeveyn olarak çocuğunuza sunabileceğiniz en büyük imkanlardan biri, o yetişkinliğe adım attığında ona hazır bir finansal teme...]]></description>
+            <enclosure length="0" type="image/jpg" url="https://imgfinans.milliyet.com.tr/i/haber/f_x_199318152188.jpg"/>
+        </item>
+        <item>
+            <title><![CDATA[Paranız Sizin İçin Mesai Yapsın]]></title>
+            <link>https://soneryilmaz.vercel.app/blog/paraniz-sizin-icin-mesai-yapsin</link>
+            <guid isPermaLink="false">I4FNKWww75kQJRh57xvM</guid>
+            <pubDate>Sat, 27 Dec 2025 10:11:26 GMT</pubDate>
+            <description><![CDATA[Paranız Sizin İçin Çalışsın: Birikimlerinizi Atıl Durumdan Kurtarmanın YollarıGünümüz ekonomik koşullarında, birikimlerin vadesiz hesaplarda veya "yastık altında" boşta durması, aslında her gün satın ...]]></description>
+            <enclosure length="0" type="image/jpg" url="https://www.paraanaliz.com/wp-content/uploads/2023/10/para_tl.jpg"/>
+        </item>
+        <item>
+            <title><![CDATA[DENEME2]]></title>
+            <link>https://soneryilmaz.vercel.app/blog/deneme2</link>
+            <guid isPermaLink="false">exzpdBP67CODRh5CewWl</guid>
+            <pubDate>Thu, 01 Jan 2026 20:20:46 GMT</pubDate>
+            <description><![CDATA[SDASDASDSAD]]></description>
+            <enclosure length="0" type="image/jpg" url="https://imgfinans.milliyet.com.tr/i/haber/f_borssaa_546194731524.jpg"/>
+        </item>
+        <item>
+            <title><![CDATA[Kod ve Finansın Kesişiminde: Algoritmalarla Yatırım Dünyası]]></title>
+            <link>https://soneryilmaz.vercel.app/blog/kod-ve-finansin-kesisiminde-algoritmalarla-yatirim-dunyasi</link>
+            <guid isPermaLink="false">j5NOyWuJE16kYZ5pxuuV</guid>
+            <pubDate>Sat, 27 Dec 2025 08:31:54 GMT</pubDate>
+            <description><![CDATA[Kod ve Finansın Kesişiminde: Algoritmalarla Yatırım DünyasıFinans dünyası, rakamların ve grafiklerin ötesinde aslında devasa bir veri denizi. Bir yazılım geliştirici adayı olarak bu denizi keşfetmeye ...]]></description>
+            <enclosure length="0" type="image/jpg" url="https://images.squarespace-cdn.com/content/v1/5b582568af2096dc0509a7db/1633420342188-A5WNLBI01D3OYKDDZF8O/robo_danisman.jpg?format=750w"/>
+        </item>
+        <item>
+            <title><![CDATA[Cebinize Girmeyen Gizli Kazanç: BES ve %30 Devlet Katkısı Mucizesi]]></title>
+            <link>https://soneryilmaz.vercel.app/blog/cebinize-girmeyen-gizli-kazanc-bes-ve-30-devlet-katkisi-mucizesi</link>
+            <guid isPermaLink="false">vu5jYFUAyfCeaKLznzlw</guid>
+            <pubDate>Mon, 29 Dec 2025 10:00:53 GMT</pubDate>
+            <description><![CDATA[Geleceğin Senin Elinde: BES ile Emeklilikte Standartlarını Sen Belirle!Birikim yapamadığınızı mı düşünüyorsunuz ya da "Emekli olunca devletin verdiği maaş yetecek mi?" kaygısı mı yaşıyorsunuz?. Hayall...]]></description>
+            <enclosure length="0" type="image/jpg" url="https://storage.acerapps.io/agent-168/acercms-public/20230814/Bireysel%20Emeklilik%20Sistemi%20.jpg"/>
+        </item>
+    </channel>
+</rss>
